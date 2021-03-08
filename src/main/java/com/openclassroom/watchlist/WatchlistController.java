@@ -53,8 +53,17 @@ public class WatchlistController {
 	@PostMapping("/watchlistItemForm")
 	public ModelAndView submitWatchlistItemForm(WatchlistItem watchlistItem) {
 		
-		watchlistItem.setId(index++);
-		watchlistItems.add(watchlistItem);
+		WatchlistItem existingItem = findWatchlistItemById(watchlistItem.getId());
+		
+		if (existingItem ==  null) {
+			watchlistItem.setId(index++);
+			watchlistItems.add(watchlistItem);
+		} else {
+			existingItem.setComment(watchlistItem.getComment());
+			existingItem.setPriority(watchlistItem.getPriority());
+			existingItem.setRating(watchlistItem.getRating());
+			existingItem.setTitle(watchlistItem.getTitle());
+		}
 		
 		RedirectView redirect = new RedirectView();
 		redirect.setUrl("/watchlist");
