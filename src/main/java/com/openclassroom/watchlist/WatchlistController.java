@@ -15,6 +15,19 @@ public class WatchlistController {
 
 	private List<WatchlistItem> watchlistItems = new ArrayList<WatchlistItem>();
 	private static int index = 1;
+	
+	// Adding a web form
+	@GetMapping("/watchlistItemForm")
+	public ModelAndView showWatchlistItemForm() {
+		
+		String viewName = "watchlistItemForm";
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		model.put("watchlistItem", new WatchlistItem());
+		
+		return new ModelAndView(viewName, model);
+	}
 
 	@GetMapping("/watchlist")
 	public ModelAndView getWatchlist() {

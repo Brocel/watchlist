@@ -17,6 +17,10 @@ public class WatchlistItem {
 		this.comment = comment;
 	}
 
+	public WatchlistItem() {
+		
+	}
+
 	public Integer getId() {
 		return id;
 	}
