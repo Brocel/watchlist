@@ -21,6 +21,7 @@ public class WatchlistController {
 
 	private List<WatchlistItem> watchlistItems = new ArrayList<WatchlistItem>();
 	private static int index = 1;
+	private static int maximumMovies = 3;
 	
 	// Adding a web form
 	@GetMapping("/watchlistItemForm")
@@ -64,6 +65,11 @@ public class WatchlistController {
 		
 		if (existingItem ==  null) {
 			
+			if (watchlistIsFull()) {
+				bindingResult.rejectValue(null, "", "Your watchlist is full (contains already" + maximumMovies + "item)");
+				return new ModelAndView("watchlistItemForm");
+			}
+			
 			if (itemAlreadyExists(watchlistItem.getTitle())) {
 				bindingResult.rejectValue("title", "", "This title already exists on your watchlist");
 				return new ModelAndView("watchlistItemForm");
@@ -105,6 +111,15 @@ public class WatchlistController {
 				return true;
 			}
 		}
+		return false;
+	}
+	
+	private boolean watchlistIsFull() {
+		
+		if (watchlistItems.size() >= maximumMovies) {
+			return true;
+		}
+		
 		return false;
 	}
 }
