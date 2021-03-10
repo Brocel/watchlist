@@ -3,6 +3,7 @@ package com.openclassroom.watchlist;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+@GoodMovie
 public class WatchlistItem {
 
 	private Integer id;
