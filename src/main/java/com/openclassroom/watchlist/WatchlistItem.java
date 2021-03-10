@@ -4,6 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @GoodMovie
+@BadMovie
 public class WatchlistItem {
 
 	private Integer id;
