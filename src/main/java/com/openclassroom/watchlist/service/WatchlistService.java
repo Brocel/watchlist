@@ -12,8 +12,6 @@ public class WatchlistService {
 
 	WatchlistRepository watchlistRepository = new WatchlistRepository();
 	
-	public int maximumMovies = watchlistRepository.maximumMovies;
-	
 	public List<WatchlistItem> getWatchlistItems() {
 		
 		return watchlistRepository.getList();
@@ -35,7 +33,7 @@ public class WatchlistService {
 		
 		if (existingItem ==  null) {
 			
-			if (getWatchlistItemsSize()>= watchlistRepository.maximumMovies) {
+			if (getWatchlistItemsSize() >= watchlistRepository.maximumMovies) {
 				
 				throw new WatchlistFullException();
 			}
