@@ -9,6 +9,7 @@ public class WatchlistRepository {
 
 	private List<WatchlistItem> watchlistItems = new ArrayList<WatchlistItem>();
 	private static int index = 1;
+	public int maximumMovies = 3;
 	
 	public List<WatchlistItem> getList() {
 		
