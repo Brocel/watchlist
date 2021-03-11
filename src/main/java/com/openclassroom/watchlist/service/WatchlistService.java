@@ -4,8 +4,6 @@ import com.openclassroom.watchlist.repository.WatchlistRepository;
 
 import java.util.List;
 
-import org.springframework.web.servlet.ModelAndView;
-
 import com.openclassroom.watchlist.domain.WatchlistItem;
 import com.openclassroom.watchlist.exception.DuplicateTitleException;
 import com.openclassroom.watchlist.exception.WatchlistFullException;
@@ -13,6 +11,8 @@ import com.openclassroom.watchlist.exception.WatchlistFullException;
 public class WatchlistService {
 
 	WatchlistRepository watchlistRepository = new WatchlistRepository();
+	
+	public int maximumMovies = watchlistRepository.maximumMovies;
 	
 	public List<WatchlistItem> getWatchlistItems() {
 		

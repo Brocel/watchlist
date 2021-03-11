@@ -16,14 +16,15 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.openclassroom.watchlist.domain.WatchlistItem;
+import com.openclassroom.watchlist.exception.DuplicateTitleException;
+import com.openclassroom.watchlist.exception.WatchlistFullException;
+import com.openclassroom.watchlist.service.WatchlistService;
  	
 
 @Controller
 public class WatchlistController {
 
-	private List<WatchlistItem> watchlistItems = new ArrayList<WatchlistItem>();
-	private static int index = 1;
-	private static int maximumMovies = 3;
+	private WatchlistService watchlistService = new WatchlistService();
 	
 	// Adding a web form
 	@GetMapping("/watchlistItemForm")
@@ -33,7 +34,7 @@ public class WatchlistController {
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		
-		WatchlistItem watchlistItem = findWatchlistItemById(id);
+		WatchlistItem watchlistItem = watchlistService.findWatchlistItemById(id);
 		
 		if (watchlistItem == null) {
 			model.put("watchlistItem", new WatchlistItem());
@@ -43,18 +44,6 @@ public class WatchlistController {
 		
 		return new ModelAndView(viewName, model);
 	}
-	
-	private WatchlistItem findWatchlistItemById(Integer id) {
-		
-		for (WatchlistItem watchlistItem : watchlistItems) {
-			
-			if (watchlistItem.getId().equals(id)) {
-				return watchlistItem;
-			}
-		}
-		
-		return null;
-	}
 
 	@PostMapping("/watchlistItemForm")
 	public ModelAndView submitWatchlistItemForm(@Valid WatchlistItem watchlistItem, BindingResult bindingResult) {
@@ -63,34 +52,21 @@ public class WatchlistController {
 			return new ModelAndView("watchlistItemForm");
 		}
 		
-		WatchlistItem existingItem = findWatchlistItemById(watchlistItem.getId());
 		
-		if (existingItem ==  null) {
-			
-			if (watchlistIsFull()) {
-				bindingResult.rejectValue(null, "", "Your watchlist is full (contains already" + maximumMovies + "item)");
-				return new ModelAndView("watchlistItemForm");
-			}
-			
-			if (itemAlreadyExists(watchlistItem.getTitle())) {
-				bindingResult.rejectValue("title", "", "This title already exists on your watchlist");
-				return new ModelAndView("watchlistItemForm");
-			}
-			
-			watchlistItem.setId(index++);
-			watchlistItems.add(watchlistItem);
-		} else {
-			existingItem.setComment(watchlistItem.getComment());
-			existingItem.setPriority(watchlistItem.getPriority());
-			existingItem.setRating(watchlistItem.getRating());
-			existingItem.setTitle(watchlistItem.getTitle());
+		try {
+			watchlistService.addOrUpdateWatchlistItem(watchlistItem);
+		} catch (WatchlistFullException e) {
+			bindingResult.rejectValue(null, "", e.errorMessage);
+			return new ModelAndView("watchlistItemForm");
+		} catch (DuplicateTitleException e) {
+			bindingResult.rejectValue("title", "", e.errorMessage);
+			return new ModelAndView("watchlistItemForm");
 		}
 		
 		RedirectView redirect = new RedirectView();
 		redirect.setUrl("/watchlist");
 		
 		return new ModelAndView(redirect);
-		
 	}
 
 	@GetMapping("/watchlist")
@@ -100,28 +76,10 @@ public class WatchlistController {
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		
-		model.put("watchlistItems", watchlistItems);
-		model.put("numberOfMovies", watchlistItems.size());
+		model.put("watchlistItems", watchlistService.getWatchlistItems());
+		model.put("numberOfMovies", watchlistService.getWatchlistItemsSize());
 		
 		return new ModelAndView(viewName, model);	
 	}
 	
-	private boolean itemAlreadyExists(String title) {
-		
-		for (WatchlistItem watchlistItem : watchlistItems) {
-			if (watchlistItem.getTitle().equals(title)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	private boolean watchlistIsFull() {
-		
-		if (watchlistItems.size() >= maximumMovies) {
-			return true;
-		}
-		
-		return false;
-	}
 }
