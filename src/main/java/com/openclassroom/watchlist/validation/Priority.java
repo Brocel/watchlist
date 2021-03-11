@@ -1,4 +1,4 @@
-package com.openclassroom.watchlist;
+package com.openclassroom.watchlist.validation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

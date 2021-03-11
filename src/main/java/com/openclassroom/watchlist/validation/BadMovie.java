@@ -1,4 +1,4 @@
-package com.openclassroom.watchlist;
+package com.openclassroom.watchlist.validation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,10 +10,10 @@ import javax.validation.Payload;
 
 @Target(ElementType.TYPE) // <- Annotation applicable to classes
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = GoodMovieValidator.class)
-public @interface GoodMovie {
+@Constraint(validatedBy = BadMovieValidator.class)
+public @interface BadMovie {
 
-	String message() default "If a movie is as good as 8, then priority should be at least M";
+	String message() default "If a movie is less good than 6, then comment should contains at least 15 characters";
 	Class<?>[] groups() default {};
 	Class<? extends Payload>[] payload() default {};
 }

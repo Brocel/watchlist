@@ -1,4 +1,4 @@
-package com.openclassroom.watchlist;
+package com.openclassroom.watchlist.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+
+import com.openclassroom.watchlist.domain.WatchlistItem;
  	
 
 @Controller
