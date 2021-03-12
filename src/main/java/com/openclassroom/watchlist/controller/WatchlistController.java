@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -27,6 +29,8 @@ public class WatchlistController {
 
 	private WatchlistService watchlistService;
 	
+	private final Logger logger = LoggerFactory.getLogger(WatchlistController.class);
+	
 	@Autowired	
 	public WatchlistController(WatchlistService watchlistService) {
 		super();
@@ -36,6 +40,8 @@ public class WatchlistController {
 	// Adding a web form
 	@GetMapping("/watchlistItemForm")
 	public ModelAndView showWatchlistItemForm(@RequestParam(required = false) Integer id) {
+		
+		logger.info("HTTP GET Request received at /watchlistItemForm URL");
 		
 		String viewName = "watchlistItemForm";
 		
@@ -54,6 +60,8 @@ public class WatchlistController {
 
 	@PostMapping("/watchlistItemForm")
 	public ModelAndView submitWatchlistItemForm(@Valid WatchlistItem watchlistItem, BindingResult bindingResult) {
+
+		logger.info("HTTP POST Request received at /watchlistItemForm URL");
 		
 		if (bindingResult.hasErrors()) {
 			return new ModelAndView("watchlistItemForm");
@@ -78,6 +86,8 @@ public class WatchlistController {
 
 	@GetMapping("/watchlist")
 	public ModelAndView getWatchlist() {
+		
+		logger.info("HTTP GET Request received at /watchlist URL");
 		
 		String viewName = "watchlist";
 		
