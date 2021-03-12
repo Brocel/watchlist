@@ -15,16 +15,28 @@ import com.openclassroom.watchlist.exception.WatchlistFullException;
 public class WatchlistService {
 
 	WatchlistRepository watchlistRepository;
+	MovieRatingService movieRatingService;
 	
 	@Autowired
-	public WatchlistService(WatchlistRepository watchlistRepository) {
+	public WatchlistService(WatchlistRepository watchlistRepository, MovieRatingService movieRatingService) {
 		super();
 		this.watchlistRepository = watchlistRepository;
+		this.movieRatingService = movieRatingService;
 	}
 
-	public List<WatchlistItem> getWatchlistItems() {
+	public List<WatchlistItem> getWatchlistItems(){
 		
-		return watchlistRepository.getList();
+		List<WatchlistItem> watchlistItems = watchlistRepository.getList();
+		
+		for (WatchlistItem watchlistItem : watchlistItems) {
+		    
+			String rating = movieRatingService.getMovieRating(watchlistItem.getTitle());
+			
+			if (rating != null) {
+				watchlistItem.setRating(rating);
+			}
+		}
+		return watchlistItems;
 	}
 	
 	public int getWatchlistItemsSize() {
